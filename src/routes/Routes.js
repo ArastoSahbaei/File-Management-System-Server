@@ -1,7 +1,11 @@
+import Controller from "../controllers/Controllers.js"
+
 const routes = (app) => {
-    app.get("/", (req, res) => {
-        res.send("Hello World!")
-    })
+    app.post("/upload", Controller.uploadFile)
+    app.get("/files", Controller.getAllFiles)
+    app.get("/search-files", Controller.searchFilesByTitle)
+    app.put("/update/:fileId", Controller.updateFile)
+    app.delete("/delete/:fileId", Controller.deleteFile)
 }
 
 export default {
