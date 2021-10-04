@@ -9,6 +9,7 @@ import Routes from "./src/routes/Routes.js"
 const app = express()
 app.use(helmet())
 app.use(morgan("common"))
+app.use(express.json())
 
 Routes.routes(app)
 
