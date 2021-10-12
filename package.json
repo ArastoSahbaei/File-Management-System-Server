@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "DEV_DB=test mocha 'tests/**' --exit"
+    "test": "DEV_DB=test mocha 'tests/**' --exit --full-trace"
   },
   "keywords": [
     "RestAPI",

@@ -3,6 +3,7 @@ import chaiHttp from "chai-http"
 import { describe, it as test } from "mocha"
 import app from "../Server.js"
 import StatusCode from "../configuration/StatusCode.js"
+import { response } from "express"
 
 
 Chai.should()
@@ -66,6 +67,21 @@ const uploadFile = () => {
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
                 dbResponseMockDataId = res._id
+                done()
+            })
+        })
+        
+    })
+}
+
+const downloadFile = () => {
+    describe("Testing download function for File entity", () => {
+        test("should download file by ID from the servers file system", (done) => {
+            Chai.request(app)
+            .get("/download/" + dbResponseMockDataId)
+            .end((error, response) => {
+                response.should.have.status(StatusCode.OK)
+                response.should.have.header("content-disposition", 'attachment; filename="mock_file.pdf"')
                 done()
             })
         })
@@ -183,5 +199,6 @@ describe("TESTING THE API ROUTE", () => {
     getFilesByCategory()
     getFilesByTitle()
     updateFile()
+    downloadFile()
     //deleteFile()
 })

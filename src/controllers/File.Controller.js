@@ -40,6 +40,22 @@ const uploadFile = async (req, res) => {
     }
 }
 
+
+const downloadFileById = async (req, res) => {
+    try {
+        const response = await FileModel.findOne({ _id: req.params.fileId })
+		if (response.length !== 0) {
+            res.set('Content-Disposition', 'attachment')
+            res.download(response.filePath)
+        } else {
+            res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file with ID: " + req.params.fileId })
+        }
+    } catch (error) {
+		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
+	}
+}
+
+
 const getAllFiles = async (req, res) => {
     try {
         const response = await FileModel.find()
@@ -48,6 +64,7 @@ const getAllFiles = async (req, res) => {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
 	}
 }
+
 
 const getFilesByCategory = async (req, res) => {
     if (!Object.keys(req.body).length) {
@@ -66,6 +83,7 @@ const getFilesByCategory = async (req, res) => {
 	}
 }
 
+
 const getFilesByTitle = async (req, res) => {
     if (!Object.keys(req.body).length) {
         return res.status(StatusCode.BAD_REQUEST).send({message: "this endpoint requires a JSON body"})
@@ -83,6 +101,7 @@ const getFilesByTitle = async (req, res) => {
 	}
 }
 
+
 const updateFile = async (req, res) => {
     if (!Object.keys(req.body).length) {
         return res.status(StatusCode.BAD_REQUEST).send({message: "this endpoint requires a JSON body"})
@@ -98,6 +117,7 @@ const updateFile = async (req, res) => {
     }
 }
 
+
 const deleteFile = async (req, res) => {
     try {
         const response = await FileModel.findByIdAndDelete(req.params.fileId)
@@ -107,8 +127,10 @@ const deleteFile = async (req, res) => {
 	}
 }
 
+
 export default {
     uploadFile,
+    downloadFileById,
     getAllFiles,
     getFilesByCategory,
     getFilesByTitle,
