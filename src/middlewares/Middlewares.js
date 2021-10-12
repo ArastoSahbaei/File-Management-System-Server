@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
 import StatusCode from "../../configuration/StatusCode.js"
+import multer from "multer"
+import fs from "fs-extra"
 
 dotenv.config()
 
@@ -19,7 +21,21 @@ const errorHandler = (error, req, res, next) => {
 	})
 }
 
+const fileStorageEngine = multer.diskStorage({
+	destination: (req, file, callBack) => {
+		let category = req.body.category
+		let path = `./uploads/${category}`
+  		fs.mkdirsSync(path)
+		callBack(null, path)
+	},
+	filename: (req, file, callBack) => {
+		callBack(null, file.originalname)
+	},
+})
+const upload = multer({storage: fileStorageEngine})  
+
 export default {
 	notFound,
-	errorHandler
+	errorHandler,
+	upload
 }

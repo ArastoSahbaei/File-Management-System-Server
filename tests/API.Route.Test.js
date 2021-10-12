@@ -12,16 +12,15 @@ Chai.use(chaiHttp)
 const randomString = Math.random().toString(36).substring(7)
 const randomTitle = Math.random().toString(36).substring(7)
 const randomAuthor = Math.random().toString(36).substring(7)
-const randomCategory = Math.random().toString(36).substring(7)
 
 const mockData = {
     title: randomTitle,
     author: randomAuthor,
-    category: randomCategory
+    category: "assignment"
 }
 let dbResponseMockDataId;
 
-/* BP for API tests
+/* BoilerPlate for API tests
 const  = () => {
     describe("", () => {
         test("should", (done) => {
@@ -45,20 +44,24 @@ const testingNonExistentRoute = () => {
     })
 }
 
-const createFile = () => {
-    describe("Testing CREATE(POST) function for File entity", () => {
-        test("Should create a file in the database", (done) => {
+const uploadFile = () => {
+    describe("Testing upload function for File entity", () => {
+        test("Should upload a file to the file system and create a file document in the database", (done) => {
             Chai.request(app)
             .post("/upload-file")
-            .send(mockData)
+            .field("category", mockData.category)
+            .field("title", randomTitle)
+            .field("author", randomAuthor)
+            .attach("file", "./mock_data/mock_file.pdf")
             .end((error, response) => {
                 response.should.have.status(StatusCode.CREATED)
                 const res = response.body
                 res.should.be.a("object")
                 res.should.have.property("_id")
-                res.should.have.property("title").eq(mockData.title)
-                res.should.have.property("author").eq(mockData.author)
+                res.should.have.property("title").eq(randomTitle)
+                res.should.have.property("author").eq(randomAuthor)
                 res.should.have.property("category").eq(mockData.category)
+                res.should.have.property("filePath").eq("uploads/assignment/mock_file.pdf")
                 res.should.have.property("createdAt")
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
@@ -175,10 +178,10 @@ const deleteFile = () => {
 
 describe("TESTING THE API ROUTE", () => {
     testingNonExistentRoute()
-    createFile()
+    uploadFile()
     getAllFiles()
     getFilesByCategory()
     getFilesByTitle()
     updateFile()
-    deleteFile()
+    //deleteFile()
 })
