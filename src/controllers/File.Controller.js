@@ -1,24 +1,7 @@
 import StatusCode from '../../configuration/StatusCode.js'
 import FileModel from "../models/Models.js"
+import utils from '../utils/utils.js'
 
-// const uploadFile = async (req, res) => {
-//     if (!Object.keys(req.body).length) {
-//         return res.status(StatusCode.BAD_REQUEST).send({message: "this endpoint requires a JSON body"})
-//     }
-
-//     const File = new FileModel({
-//         title: req.body.title,
-//         author: req.body.author,
-//         category: req.body.category
-//     })
-
-//     try {
-//         const response = await File.save()
-//         res.status(StatusCode.CREATED).send(response)
-//     } catch (error) {
-//         res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
-//     }
-// }
 
 const uploadFile = async (req, res) => {
     if (!Object.keys(req.body).length) {
@@ -49,6 +32,26 @@ const downloadFileById = async (req, res) => {
             res.download(response.filePath)
         } else {
             res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file with ID: " + req.params.fileId })
+        }
+    } catch (error) {
+		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
+	}
+}
+
+//change req.body.. to req.query..
+const fuzzySearch = async (req, res) => {
+    const regex = new RegExp(utils.escapeRegex(req.body.search), "gi")
+    try {
+        const response = await FileModel.find({$or: [
+            {title: regex},
+            {author: regex},
+            {category:regex}
+            ]}
+        )
+        if (response.length !== 0) {
+            res.status(StatusCode.OK).send(response)
+        } else {
+            res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file: " + req.body.search })
         }
     } catch (error) {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
@@ -131,6 +134,7 @@ const deleteFile = async (req, res) => {
 export default {
     uploadFile,
     downloadFileById,
+    fuzzySearch,
     getAllFiles,
     getFilesByCategory,
     getFilesByTitle,
