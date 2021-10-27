@@ -5,17 +5,17 @@ import utils from '../utils/utils.js'
 
 const uploadFile = async (req, res) => {
     if (!Object.keys(req.body).length) {
-        return res.status(StatusCode.BAD_REQUEST).send({message: "this endpoint requires a JSON body"})
+        return res.status(StatusCode.BAD_REQUEST).send({message: "this endpoint requires a body"})
     }
 
-    const File = new FileModel({
-        title: req.body.title,
-        author: req.body.author,
-        category: req.body.category,
-        filePath: req.file.path
-    })
-
     try {
+        const File = new FileModel({
+            title: req.body.title,
+            author: req.body.author,
+            category: req.body.category,
+            filePath: req.file.path
+        })
+
         const response = await File.save()
         res.status(StatusCode.CREATED).send(response)
     } catch (error) {
@@ -38,9 +38,9 @@ const downloadFileById = async (req, res) => {
 	}
 }
 
-//change req.body.. to req.query..
+
 const fuzzySearch = async (req, res) => {
-    const regex = new RegExp(utils.escapeRegex(req.body.search), "gi")
+    const regex = new RegExp(utils.escapeRegex(req.query.search), "gi")
     try {
         const response = await FileModel.find({$or: [
             {title: regex},

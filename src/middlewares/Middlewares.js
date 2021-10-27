@@ -32,10 +32,16 @@ const fileStorageEngine = multer.diskStorage({
 		callBack(null, file.originalname)
 	},
 })
-const upload = multer({storage: fileStorageEngine})  
+const upload = multer({storage: fileStorageEngine})
+
+const testing = (req, res, next) => {
+	console.log("MIDDLEWARE:", req.body)
+	next()
+}
 
 export default {
 	notFound,
 	errorHandler,
-	upload
+	upload,
+	testing
 }
