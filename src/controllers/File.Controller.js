@@ -1,7 +1,12 @@
 import StatusCode from '../../configuration/StatusCode.js'
 import FileModel from "../models/Models.js"
 import utils from '../utils/utils.js'
+import fs from "fs"
+import dotenv from 'dotenv'
 
+
+dotenv.config()
+const { PROJECT_ROOT_PATH } = process.env
 
 const uploadFile = async (req, res) => {
     if (!Object.keys(req.body).length) {
@@ -40,12 +45,12 @@ const downloadFileById = async (req, res) => {
 
 
 const fuzzySearch = async (req, res) => {
-    const regex = new RegExp(utils.escapeRegex(req.query.search), "gi")
+    const regexSearch = new RegExp(utils.escapeRegex(req.query.search), "gi")
     try {
         const response = await FileModel.find({$or: [
-            {title: regex},
-            {author: regex},
-            {category:regex}
+            {title: regexSearch},
+            {author: regexSearch},
+            {category:regexSearch}
             ]}
         )
         if (response.length !== 0) {
@@ -124,6 +129,8 @@ const updateFile = async (req, res) => {
 const deleteFile = async (req, res) => {
     try {
         const response = await FileModel.findByIdAndDelete(req.params.fileId)
+        const filePath = PROJECT_ROOT_PATH + response.filePath
+        fs.unlinkSync(filePath)
         res.status(StatusCode.OK).send(response)
     } catch (error) {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
