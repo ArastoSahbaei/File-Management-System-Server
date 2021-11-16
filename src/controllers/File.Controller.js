@@ -24,6 +24,7 @@ const uploadFile = async (req, res) => {
         const response = await File.save()
         res.status(StatusCode.CREATED).send(response)
     } catch (error) {
+        console.log("ERROR:", error)
         res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
     }
 }
