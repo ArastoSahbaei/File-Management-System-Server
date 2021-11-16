@@ -22,7 +22,7 @@ if (port == null || port == "") {
 }
 
 const connectToDatabase = async () => {
-    const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL + DEV_DB : PROD_DATABASE_URL + PROD_DB
+    const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL + DEV_DB : PROD_DATABASE_URL
     try {
         await mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
         console.log(`✔️  SUCCESSFULLY CONNECTED TO DATABASE:\n${DATABASE_URL}`)
