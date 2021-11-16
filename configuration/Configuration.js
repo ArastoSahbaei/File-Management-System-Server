@@ -25,7 +25,7 @@ const connectToDatabase = async () => {
     const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL + DEV_DB : PROD_DATABASE_URL + PROD_DB
     try {
         await mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-        console.log('✔️  SUCCESSFULLY CONNECTED TO DATABASE')
+        console.log(`✔️  SUCCESSFULLY CONNECTED TO DATABASE:\n${DATABASE_URL}`)
     } catch (error) {
         console.log('❌  ERROR OCCURED WHILE TRYING TO CONNECT TO THE DATABASE', error.message)
         process.exit()
@@ -39,7 +39,7 @@ const connectToPort = async (app) => {
             console.log(`✔️  SERVER IS RUNNING ON PORT: ${port}`)
         })
     } catch (error) {
-        console.log('❌  ERROR OCCURED WHILE TRYING TO CONNECT TO THE PORT')
+        console.log('❌  ERROR OCCURED WHILE TRYING TO CONNECT TO THE PORT', error.message)
     }
 }
 
