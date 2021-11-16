@@ -1,6 +1,5 @@
 import FileController from "../controllers/File.Controller.js"
 import MWs from "../middlewares/Middlewares.js"
-import upload from "multer"
 
 const routes = (app) => {
     app.post("/upload-file", MWs.upload.single("file"), FileController.uploadFile)
