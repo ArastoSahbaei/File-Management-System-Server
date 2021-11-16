@@ -5,7 +5,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 const {
     DEV_DATABASE_URL,
+    DEV_DB,
     PROD_DATABASE_URL,
+    PROD_DB,
     ENVIRONMENT,
     PORT,
     DEV_SERVER_IP,
@@ -13,7 +15,7 @@ const {
 } = process.env
 
 const connectToDatabase = async () => {
-    const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL : PROD_DATABASE_URL
+    const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL + DEV_DB : PROD_DATABASE_URL + PROD_DB
     try {
         await mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
         console.log('✔️  SUCCESSFULLY CONNECTED TO DATABASE')

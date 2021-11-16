@@ -6,12 +6,11 @@ import Configuration from "./configuration/Configuration.js"
 import Middlewares from "./src/middlewares/Middlewares.js"
 import Routes from "./src/routes/Routes.js"
 
-
 const application = express()
-application.use(cors({ credentials: true }))
 application.use(helmet())
 application.use(morgan("common"))
 application.use(express.json())
+application.use(cors())
 
 Routes.routes(application)
 
@@ -20,3 +19,5 @@ application.use(Middlewares.errorHandler)
 
 Configuration.connectToDatabase()
 Configuration.connectToPort(application)
+
+export default application
