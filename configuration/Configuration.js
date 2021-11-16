@@ -14,6 +14,13 @@ const {
     PROD_SERVER_IP
 } = process.env
 
+console.log(`RUNNING IN ${ENVIRONMENT} ENVIRONMENT`)
+
+let port = PORT
+if (port == null || port == "") {
+    port = 3001
+}
+
 const connectToDatabase = async () => {
     const DATABASE_URL = ENVIRONMENT === 'DEVELOPMENT' ? DEV_DATABASE_URL + DEV_DB : PROD_DATABASE_URL + PROD_DB
     try {
@@ -28,8 +35,8 @@ const connectToDatabase = async () => {
 const connectToPort = async (app) => {
     const SERVER_PUBLIC_IP = ENVIRONMENT === 'DEVELOPMENT' ? DEV_SERVER_IP : PROD_SERVER_IP
     try {
-        await app.listen(PORT || 3001, (SERVER_PUBLIC_IP), () => {
-            console.log(`✔️  SERVER IS RUNNING ON PORT: ${PORT || 3001}`)
+        await app.listen(port, (SERVER_PUBLIC_IP), () => {
+            console.log(`✔️  SERVER IS RUNNING ON PORT: ${port}`)
         })
     } catch (error) {
         console.log('❌  ERROR OCCURED WHILE TRYING TO CONNECT TO THE PORT')

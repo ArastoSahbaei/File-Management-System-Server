@@ -10,6 +10,9 @@ const routes = (app) => {
     app.get("/get-files/title", FileController.getFilesByTitle)
     app.put("/update-file/:fileId", FileController.updateFile)
     app.delete("/delete-file/:fileId", FileController.deleteFile)
+    app.get("/hello-world", (req, res) => {
+        res.status(200).send({message: "Hello World!"})
+    })
 }
 
 export default {
