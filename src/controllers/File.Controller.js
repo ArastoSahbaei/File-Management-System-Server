@@ -54,11 +54,8 @@ const fuzzySearch = async (req, res) => {
             {category:regexSearch}
             ]}
         )
-        if (response.length !== 0) {
-            res.status(StatusCode.OK).send(response)
-        } else {
-            res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file: " + req.body.search })
-        }
+        res.status(StatusCode.OK).send(response)
+
     } catch (error) {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
 	}
@@ -82,11 +79,7 @@ const getFilesByCategory = async (req, res) => {
 
     try {
         const response = await FileModel.find({ category: req.body.category })
-		if (response.length !== 0) {
-            res.status(StatusCode.OK).send(response)
-        } else {
-            res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file: " + req.body.category })
-        }
+        res.status(StatusCode.OK).send(response)
     } catch (error) {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
 	}
@@ -100,11 +93,7 @@ const getFilesByTitle = async (req, res) => {
 
     try {
         const response = await FileModel.find({ title: req.body.title })
-		if (response.length !== 0) {
-            res.status(StatusCode.OK).send(response)
-        } else {
-            res.status(StatusCode.NOT_FOUND).send({ message: "Could not find file: " + req.body.title })
-        }
+        res.status(StatusCode.OK).send(response)
     } catch (error) {
 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
 	}
