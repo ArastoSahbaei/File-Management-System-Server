@@ -107,7 +107,9 @@ const updateFile = async (req, res) => {
 
     try {
         const response = await FileModel.findByIdAndUpdate(req.params.fileId, {
-            title: req.body.title
+            title: req.body.title,
+            author: req.body.author,
+            category: req.body.category
         }, { new: true })
         res.status(StatusCode.OK).send(response)
     } catch (error) {
