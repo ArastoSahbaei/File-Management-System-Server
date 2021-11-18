@@ -14,8 +14,5 @@ steps:
 #   displayName: 'Run a one-line script'
 
 - script: |
-    echo BUILDING APPLICATION
-    npm install
-    echo RUNNING NPM TEST
-    npm test
-  displayName: 'Build backend and run tests'
+    echo Hello World!
+  displayName: 'TESTING PIPELINE'
