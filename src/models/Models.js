@@ -5,8 +5,10 @@ const FileSchema = mongoose.Schema(
 	{
 		title: String,
 		author: String,
-		category: {type: String, required: true},
-		filePath: {type: String, required: true}
+		category: { type: String, required: true },
+		filePath: { type: String, required: true },
+		fileType: { type: String, required: false },
+		fileSize: { type: String, required: false }
 	}, { timestamps: true }
 )
 
