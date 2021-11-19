@@ -42,7 +42,8 @@ const uploadFile = async (req, res) => {
             subjects: req.body.subjects,
             filePath: req.file.path,
             fileType: req.file.mimetype,
-            fileSize: fileSizeFormatter(req.file.size, 2)
+            fileSize: fileSizeFormatter(req.file.size, 2),
+            numOfDownloads: 0
         })
 
         const response = await File.save()
@@ -56,8 +57,9 @@ const uploadFile = async (req, res) => {
 
 const downloadFileById = async (req, res) => {
 	try {
-		const response = await FileModel.findOne({ _id: req.params.fileId })
+		const response = await FileModel.findByIdAndUpdate(req.params.fileId, {$inc: {"numOfDownloads": 1}})
 		if (response.length !== 0) {
+            
 			res.set('Content-Disposition', 'attachment')
 			res.download(response.filePath)
 		} else {

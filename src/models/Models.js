@@ -9,7 +9,8 @@ const FileSchema = mongoose.Schema(
 		subjects: { type: Array, required: true },
 		filePath: { type: String, required: true },
 		fileType: { type: String, required: false },
-		fileSize: { type: String, required: false }
+		fileSize: { type: String, required: false },
+		numOfDownloads: { type: Number, required: false }
 	}, { timestamps: true }
 )
 
