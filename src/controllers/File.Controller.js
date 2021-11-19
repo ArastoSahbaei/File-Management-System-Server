@@ -4,26 +4,53 @@ import utils from '../utils/utils.js'
 import fs from "fs"
 import { fileSizeFormatter } from '../functions/fileSizeFormatter.js'
 
-const uploadFile = async (req, res) => {
-	if (!Object.keys(req.body).length) {
-		return res.status(StatusCode.BAD_REQUEST).send({ message: "this endpoint requires a body" })
-	}
+// const uploadFile = async (req, res) => {
+// 	if (!Object.keys(req.body).length) {
+// 		return res.status(StatusCode.BAD_REQUEST).send({ message: "this endpoint requires a body" })
+// 	}
 
-	try {
-		const File = new FileModel({
-			title: req.body.title,
-			author: req.body.author,
-			category: req.body.category,
-			filePath: req.file.path,
-			fileType: req.file.mimetype,
-			fileSize: fileSizeFormatter(req.file.size, 2)
-		})
-		await File.save()
-		res.status(StatusCode.CREATED)
-	} catch (error) {
-		console.log("ERROR:", error)
-		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
-	}
+//     console.log("***REQUEST***\n" + req.body)
+
+// 	try {
+// 		const File = new FileModel({
+// 			title: req.body.title,
+// 			author: req.body.author,
+// 			category: req.body.category,
+//             subjects: req.body.subjects,
+// 			filePath: req.file.path
+// 			// fileType: req.file.mimetype,
+// 			// fileSize: fileSizeFormatter(req.file.size, 2)
+// 		})
+// 		await File.save()
+// 		res.status(StatusCode.CREATED)
+// 	} catch (error) {
+// 		console.log("ERROR:", error)
+// 		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
+// 	}
+// }
+
+const uploadFile = async (req, res) => {
+    if (!Object.keys(req.body).length) {
+        return res.status(StatusCode.BAD_REQUEST).send({ message: "this endpoint requires a body" })
+    }
+
+    try {
+        const File = new FileModel({
+            title: req.body.title,
+            author: req.body.author,
+            category: req.body.category,
+            subjects: req.body.subjects,
+            filePath: req.file.path,
+            fileType: req.file.mimetype,
+            fileSize: fileSizeFormatter(req.file.size, 2)
+        })
+
+        const response = await File.save()
+        res.status(StatusCode.CREATED).send(response)
+    } catch (error) {
+        console.log("ERROR:", error)
+        res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
+    }
 }
 
 
@@ -49,7 +76,8 @@ const fuzzySearch = async (req, res) => {
 			$or: [
 				{ title: regexSearch },
 				{ author: regexSearch },
-				{ category: regexSearch }
+				{ category: regexSearch },
+                { subjects: regexSearch }
 			]
 		}
 		)
@@ -108,7 +136,8 @@ const updateFile = async (req, res) => {
 		const response = await FileModel.findByIdAndUpdate(req.params.fileId, {
 			title: req.body.title,
 			author: req.body.author,
-			category: req.body.category
+			category: req.body.category,
+            subjects: req.body.subjects
 		}, { new: true })
 		res.status(StatusCode.OK).send(response)
 	} catch (error) {
