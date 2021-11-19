@@ -9,16 +9,26 @@ import { response } from "express"
 Chai.should()
 Chai.use(chaiHttp)
 
+const genRandomStrings = (numberOfStrings) => {
+    let randomStrings = []
+    for(let i = 0; i < numberOfStrings; i++) {
+        randomStrings.push(Math.random().toString(36).substring(7))
+    }
+    return randomStrings
+}
+
 //Mock Data
 const randomString = Math.random().toString(36).substring(7)
 const randomTitle = Math.random().toString(36).substring(7)
 const randomAuthor = Math.random().toString(36).substring(7)
+const randomSubjects = genRandomStrings(3)
 const testEnvCategory = "npm-test"
 
 const mockData = {
     title: randomTitle,
     author: randomAuthor,
-    category: testEnvCategory
+    category: testEnvCategory,
+    subjects: randomSubjects
 }
 let dbResponseMockDataId;
 
@@ -52,22 +62,24 @@ const uploadFile = () => {
             Chai.request(app)
             .post("/upload-file")
             .field("category", mockData.category)
-            .field("title", randomTitle)
-            .field("author", randomAuthor)
+            .field("title", mockData.title)
+            .field("author", mockData.author)
+            .field("subjects", mockData.subjects)
             .attach("file", "./mock_data/mock_file.pdf")
             .end((error, response) => {
-                response.should.have.status(StatusCode.CREATED)
                 const res = response.body
+                dbResponseMockDataId = res._id
+                response.should.have.status(StatusCode.CREATED)
                 res.should.be.a("object")
                 res.should.have.property("_id")
-                res.should.have.property("title").eq(randomTitle)
-                res.should.have.property("author").eq(randomAuthor)
-                res.should.have.property("category").eq(mockData.category)
-                res.should.have.property("filePath").eq(`uploads/${testEnvCategory}/mock_file.pdf`)
+                res.should.have.property("title").eql(randomTitle)
+                res.should.have.property("author").eql(randomAuthor)
+                res.should.have.property("category").eql(mockData.category)
+                res.should.have.property("subjects").eql(mockData.subjects)
+                res.should.have.property("filePath").eql(`uploads/${testEnvCategory}/mock_file.pdf`)
                 res.should.have.property("createdAt")
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
-                dbResponseMockDataId = res._id
                 done()
             })
         })
@@ -99,10 +111,10 @@ const getAllFiles = () => {
                 response.should.have.status(StatusCode.OK)
                 const res = response.body
                 res.should.be.an("array")
-                res[0].should.have.property("_id").eq(dbResponseMockDataId)
-                res[0].should.have.property("title").eq(mockData.title)
-                res[0].should.have.property("author").eq(mockData.author)
-                res[0].should.have.property("category").eq(mockData.category)
+                res[0].should.have.property("_id").eql(dbResponseMockDataId)
+                res[0].should.have.property("title").eql(mockData.title)
+                res[0].should.have.property("author").eql(mockData.author)
+                res[0].should.have.property("category").eql(mockData.category)
                 res[0].should.have.property("createdAt")
                 res[0].should.have.property("updatedAt")
                 res[0].should.have.property("__v")
@@ -125,7 +137,7 @@ const getFilesByCategory = () => {
                 res.should.be.an("array")
 
                 for (let i = 0; i < res.length; i++) {
-                    res[i].should.have.property("category").eq(mockData.category)
+                    res[i].should.have.property("category").eql(mockData.category)
                 }
                 done()
             })
@@ -146,7 +158,7 @@ const getFilesByTitle = () => {
                 res.should.be.an("array")
 
                 for (let i = 0; i < res.length; i++) {
-                    res[i].should.have.property("title").eq(mockData.title)
+                    res[i].should.have.property("title").eql(mockData.title)
                 }
                 done()
             })
@@ -165,10 +177,10 @@ const updateFile = () => {
                 response.should.have.status(StatusCode.OK)
                 const res = response.body
                 res.should.be.a("object")
-                res.should.have.property("_id").eq(dbResponseMockDataId)
-                res.should.have.property("title").eq("updated title")
-                res.should.have.property("author").eq(mockData.author)
-                res.should.have.property("category").eq(mockData.category)
+                res.should.have.property("_id").eql(dbResponseMockDataId)
+                res.should.have.property("title").eql("updated title")
+                res.should.have.property("author").eql(mockData.author)
+                res.should.have.property("category").eql(mockData.category)
                 res.should.have.property("createdAt")
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
