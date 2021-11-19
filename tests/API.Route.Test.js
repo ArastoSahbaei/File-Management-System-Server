@@ -13,11 +13,12 @@ Chai.use(chaiHttp)
 const randomString = Math.random().toString(36).substring(7)
 const randomTitle = Math.random().toString(36).substring(7)
 const randomAuthor = Math.random().toString(36).substring(7)
+const testEnvCategory = "npm-test"
 
 const mockData = {
     title: randomTitle,
     author: randomAuthor,
-    category: "assignment"
+    category: testEnvCategory
 }
 let dbResponseMockDataId;
 
@@ -62,7 +63,7 @@ const uploadFile = () => {
                 res.should.have.property("title").eq(randomTitle)
                 res.should.have.property("author").eq(randomAuthor)
                 res.should.have.property("category").eq(mockData.category)
-                res.should.have.property("filePath").eq("uploads/assignment/mock_file.pdf")
+                res.should.have.property("filePath").eq(`uploads/${testEnvCategory}/mock_file.pdf`)
                 res.should.have.property("createdAt")
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
@@ -180,7 +181,7 @@ const updateFile = () => {
 
 const deleteFile = () => {
     describe("Deleting(DELETE) a file from the the database", () => {
-        test("Should delete a file", (done) => {
+        test("Should delete the previously uploaded mock file", (done) => {
             Chai.request(app)
             .delete("/delete-file/" + dbResponseMockDataId)
             .end((error, response) => {
@@ -200,5 +201,5 @@ describe("TESTING THE API ROUTE", () => {
     getFilesByTitle()
     updateFile()
     downloadFile()
-    //deleteFile()
+    deleteFile()
 })
