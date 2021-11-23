@@ -10,10 +10,14 @@ on:
     branches: [ master, dev ]
 
 env:
+  PORT: 3001
+  ENVIRONMENT: DEVELOPMENT
   DEV_DATABASE_URL: mongodb://localhost:27017/
   DEV_DB: dev
+  PROD_DB: prod
   DEV_SERVER_IP: localhost
-  PORT: 3001
+  PROD_SERVER_IP: 0.0.0.0
+  #PROJECT_ROOT_PATH: /home/tomten/DevOps/LIA-1/File-Management-System-Server/
 
 jobs:
   build:
@@ -37,9 +41,7 @@ jobs:
         echo DEV_DB=$DEV_DB >> .env
         echo DEV_SERVER_IP=$DEV_SERVER_IP >> .env
         echo PORT=$PORT >> .env
-        echo DB URL ENV = $DEV_DATABASE_URL
-        ls
-        cat .env
+        pwd
     
     - run: npm ci
     - run: npm run build --if-present
