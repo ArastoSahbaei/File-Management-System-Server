@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ master, dev ]
 
+env:
+  DEV_DATABASE_URL: mongodb://localhost:27017/
+  DEV_DB: dev
+  DEV_SERVER_IP: localhost
+  PORT: 3001
+
 jobs:
   build:
     runs-on: ubuntu-latest
