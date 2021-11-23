@@ -28,6 +28,7 @@ const connectToDatabase = async () => {
         console.log(`✔️  SUCCESSFULLY CONNECTED TO DATABASE:\n${DATABASE_URL}`)
     } catch (error) {
         console.log('❌  ERROR OCCURED WHILE TRYING TO CONNECT TO THE DATABASE', error.message)
+        console.log("*************DATABASE_URL***************\n" + DATABASE_URL)
         process.exit()
     }
 }

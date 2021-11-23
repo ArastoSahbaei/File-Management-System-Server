@@ -109,5 +109,5 @@ dist
 
 # Specifically for this project
 uploads/
-mock_data/
+#mock_data/
 uml-ish.drawio
