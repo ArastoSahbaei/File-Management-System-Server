@@ -17,7 +17,7 @@ env:
   PROD_DB: prod
   DEV_SERVER_IP: localhost
   PROD_SERVER_IP: 0.0.0.0
-  #PROJECT_ROOT_PATH: /home/tomten/DevOps/LIA-1/File-Management-System-Server/
+  PROJECT_ROOT_PATH: /home/runner/work/File-Management-System-Server/File-Management-System-Server/
 
 jobs:
   build:
