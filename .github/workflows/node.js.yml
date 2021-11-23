@@ -37,6 +37,9 @@ jobs:
         echo DEV_DB=$DEV_DB >> .env
         echo DEV_SERVER_IP=$DEV_SERVER_IP >> .env
         echo PORT=$PORT >> .env
+        echo DB URL ENV = $DEV_DATABASE_URL
+        ls
+        cat .env
     
     - run: npm ci
     - run: npm run build --if-present
