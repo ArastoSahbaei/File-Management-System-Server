@@ -30,6 +30,14 @@ jobs:
     - name: Create mongoDB Docker container      
       run: sudo docker run -d -p 27017:27017 mongo:5.0.4
     
+    - name: Create .env file
+      run: |
+        touch .env
+        echo DEV_DATABASE_URL=$DEV_DATABASE_URL >> .env
+        echo DEV_DB=$DEV_DB >> .env
+        echo DEV_SERVER_IP=$DEV_SERVER_IP >> .env
+        echo PORT=$PORT >> .env
+    
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
