@@ -39,7 +39,7 @@ const uploadFile = async (req, res) => {
             title: req.body.title,
             author: req.body.author,
             category: req.body.category,
-            subjects: req.body.subjects,
+            subjects: utils.splitStringByChar(req.body.subjects, ","),
             filePath: req.file.path,
             fileType: req.file.mimetype,
             fileSize: fileSizeFormatter(req.file.size, 2),
