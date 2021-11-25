@@ -8,6 +8,7 @@ const routes = (app) => {
     app.get("/get-files", FileController.getAllFiles)
     app.get("/get-files/category", FileController.getFilesByCategory)
     app.get("/get-files/title", FileController.getFilesByTitle)
+    app.get("/get-file/:fileId", FileController.getFileById)
     app.put("/update-file/:fileId", FileController.updateFile)
     app.delete("/delete-file/:fileId", FileController.deleteFile)
     app.get("/hello-world", (req, res) => {
