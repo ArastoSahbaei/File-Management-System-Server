@@ -39,7 +39,7 @@ const uploadFile = async (req, res) => {
             title: req.body.title,
             author: req.body.author,
             category: req.body.category,
-            subjects: req.body.subjects,
+            subjects: utils.splitStringByChar(req.body.subjects, ","),
             filePath: req.file.path,
             fileType: req.file.mimetype,
             fileSize: fileSizeFormatter(req.file.size, 2),
@@ -129,6 +129,16 @@ const getFilesByTitle = async (req, res) => {
 }
 
 
+const getFileById = async (req, res) => {
+	try {
+		const response = await FileModel.findById(req.params.fileId)
+		res.status(StatusCode.OK).send(response)
+	} catch (error) {
+		res.status(StatusCode.INTERNAL_SERVER_ERROR).send({ message: error.message })
+	}
+}
+
+
 const updateFile = async (req, res) => {
 	if (!Object.keys(req.body).length) {
 		return res.status(StatusCode.BAD_REQUEST).send({ message: "this endpoint requires a JSON body" })
@@ -167,6 +177,7 @@ export default {
 	getAllFiles,
 	getFilesByCategory,
 	getFilesByTitle,
+	getFileById,
 	updateFile,
 	deleteFile
 }

@@ -4,24 +4,26 @@ import { describe, it as test } from "mocha"
 import app from "../Server.js"
 import StatusCode from "../configuration/StatusCode.js"
 import { response } from "express"
+import utils from "../src/utils/utils.js"
 
 
 Chai.should()
 Chai.use(chaiHttp)
 
-const genRandomStrings = (numberOfStrings) => {
-    let randomStrings = []
+const genRandStringsSplitByChar = (numberOfStrings, splitChar) => {
+    let randomStrings = ""
     for(let i = 0; i < numberOfStrings; i++) {
-        randomStrings.push(Math.random().toString(36).substring(7))
+        randomStrings = randomStrings.concat(Math.random().toString(36).substring(7))
+        randomStrings = randomStrings.concat(splitChar)
     }
-    return randomStrings
+    return randomStrings.slice(0, randomStrings.length - 1)
 }
 
 //Mock Data
 const randomString = Math.random().toString(36).substring(7)
 const randomTitle = Math.random().toString(36).substring(7)
 const randomAuthor = Math.random().toString(36).substring(7)
-const randomSubjects = genRandomStrings(3)
+const randomSubjects = genRandStringsSplitByChar(3, ",")
 const testEnvCategory = "npm-test"
 
 const mockData = {
@@ -30,7 +32,9 @@ const mockData = {
     category: testEnvCategory,
     subjects: randomSubjects
 }
+
 let dbResponseMockDataId;
+const subjectsArrayInDb = utils.splitStringByChar(randomSubjects, ",")
 
 /* BoilerPlate for API tests
 const  = () => {
@@ -56,6 +60,7 @@ const testingNonExistentRoute = () => {
     })
 }
 
+
 const uploadFile = () => {
     describe("Testing upload function for File entity", () => {
         test("Should upload a file to the file system and create a file document in the database", (done) => {
@@ -75,7 +80,7 @@ const uploadFile = () => {
                 res.should.have.property("title").eql(randomTitle)
                 res.should.have.property("author").eql(randomAuthor)
                 res.should.have.property("category").eql(mockData.category)
-                res.should.have.property("subjects").eql(mockData.subjects)
+                res.should.have.property("subjects").eql(subjectsArrayInDb)
                 res.should.have.property("filePath").eql(`uploads/${testEnvCategory}/mock_file.pdf`)
                 res.should.have.property("numOfDownloads").eql(0)
                 res.should.have.property("createdAt")
@@ -87,6 +92,7 @@ const uploadFile = () => {
         
     })
 }
+
 
 const downloadFile = () => {
     describe("Testing download function for File entity", () => {
@@ -103,6 +109,7 @@ const downloadFile = () => {
     })
 }
 
+
 const getAllFiles = () => {
     describe("Fetching all files", () => {
         test("Should return all files", (done) => {
@@ -116,6 +123,7 @@ const getAllFiles = () => {
                 res[0].should.have.property("title").eql(mockData.title)
                 res[0].should.have.property("author").eql(mockData.author)
                 res[0].should.have.property("category").eql(mockData.category)
+                res[0].should.have.property("subjects").eql(subjectsArrayInDb)
                 res[0].should.have.property("numOfDownloads").eql(1)
                 res[0].should.have.property("createdAt")
                 res[0].should.have.property("updatedAt")
@@ -126,6 +134,7 @@ const getAllFiles = () => {
         
     })
 }
+
 
 const getFilesByCategory = () => {
     describe("Fetching all files by category", () => {
@@ -148,6 +157,7 @@ const getFilesByCategory = () => {
     })
 }
 
+
 const getFilesByTitle = () => {
     describe("Fetching all files by title", () => {
         test("Should return all files with specified title", (done) => {
@@ -169,6 +179,33 @@ const getFilesByTitle = () => {
     })
 }
 
+
+const getFileById = () => {
+    describe("Fetching a file by id number", () => {
+        test("Should return one file by the given id number", (done) => {
+            Chai.request(app)
+            .get(`/get-file/${dbResponseMockDataId}`)
+            .end((error, response) => {
+                response.should.have.status(StatusCode.OK)
+                const res = response.body
+                res.should.be.a("object")
+                res.should.have.property("_id").eql(dbResponseMockDataId)
+                res.should.have.property("title").eql(mockData.title)
+                res.should.have.property("author").eql(mockData.author)
+                res.should.have.property("category").eql(mockData.category)
+                res.should.have.property("subjects").eql(subjectsArrayInDb)
+                res.should.have.property("numOfDownloads").eql(1)
+                res.should.have.property("createdAt")
+                res.should.have.property("updatedAt")
+                res.should.have.property("__v")
+                done()
+            })
+        })
+        
+    })
+}
+
+
 const updateFile = () => {
     describe("Updating(PUT) a file in the database", () => {
         test("Should update a file", (done) => {
@@ -183,6 +220,7 @@ const updateFile = () => {
                 res.should.have.property("title").eql("updated title")
                 res.should.have.property("author").eql(mockData.author)
                 res.should.have.property("category").eql(mockData.category)
+                res.should.have.property("subjects").eql(subjectsArrayInDb)
                 res.should.have.property("createdAt")
                 res.should.have.property("updatedAt")
                 res.should.have.property("__v")
@@ -192,6 +230,7 @@ const updateFile = () => {
         
     })
 }
+
 
 const deleteFile = () => {
     describe("Deleting(DELETE) a file from the the database", () => {
@@ -207,6 +246,7 @@ const deleteFile = () => {
     })
 }
 
+
 describe("TESTING THE API ROUTE", () => {
     testingNonExistentRoute()
     uploadFile()
@@ -214,6 +254,7 @@ describe("TESTING THE API ROUTE", () => {
     getAllFiles()
     getFilesByCategory()
     getFilesByTitle()
+    getFileById()
     updateFile()
     deleteFile()
 })
